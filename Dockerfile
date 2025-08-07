@@ -1,24 +1,20 @@
-
+# Étape 1 : build Maven
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-
-WORKDIR /app
+WORKDIR /build
 COPY . .
 
+# Build du .jar
+RUN mvn clean package -DskipTests
 
-RUN mvn clean -DskipTests
-
-
-FROM openjdk:17-jdk-slim
-
+# Étape 2 : image d'exécution
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
+# Copie du .jar — remplace avec le vrai nom
+COPY --from=build /build/target/hello-world-0.0.1-SNAPSHOT.jar app.jar
 
-COPY --from=build /build/target/*.jar app.jar
-
-
-EXPOSE 8081
-
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
