@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 
-RUN mvn clean
+RUN mvn clean -DskipTests
 
 
 FROM openjdk:17-jdk-slim
@@ -15,7 +15,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/hello-world-0.0.1-SNAPSHOT.jar app.jar
 
 
 EXPOSE 8081
